@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="iniciarJogo()">
+    <table id="tabuleiro">
+        <tr>
+            <td class="celula" data-linha="0" data-coluna="0"></td>
+            <td class="celula" data-linha="0" data-coluna="1"></td>
+            <td class="celula" data-linha="0" data-coluna="2"></td>
+        </tr>
+        <tr>
+            <td class="celula" data-linha="1" data-coluna="0"></td>
+            <td class="celula" data-linha="1" data-coluna="1"></td>
+            <td class="celula" data-linha="1" data-coluna="2"></td>
+        </tr>
+        <tr>
+            <td class="celula" data-linha="2" data-coluna="0"></td>
+            <td class="celula" data-linha="2" data-coluna="1"></td>
+            <td class="celula" data-linha="2" data-coluna="2"></td>
+        </tr>
+    </table>
+</body>
+
+<script>
+    // Função para inicializar o tabuleiro
+    function iniciarJogo() {
+        // Cria um array para representar o tabuleiro
+        let tabuleiro = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+
+        // Define um jogador inicial
+        let jogadorAtual = 'X';
+
+        // Adiciona um evento de clique a cada célula do tabuleiro
+        let celulas = document.querySelectorAll('.celula');
+        celulas.forEach(celula => {
+            celula.addEventListener('click', function () {
+                if (celula.textContent === '' && !verificarVitoria(tabuleiro)) {
+                    // Atualiza a célula clicada com o símbolo do jogador atual
+                    celula.textContent = jogadorAtual;
+
+                    // Atualiza o tabuleiro com a jogada
+                    let linha = celula.dataset.linha;
+                    let coluna = celula.dataset.coluna;
+                    tabuleiro[linha][coluna] = jogadorAtual;
+
+                    // Verifica se houve um vencedor
+                    if (verificarVitoria(tabuleiro)) {
+                        alert('Jogador ' + jogadorAtual + ' venceu!');
+                    } else {
+                        // Alterna para o próximo jogador
+                        jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
+                    }
+                }
+            });
+        });
+    }
+
+    // Função para verificar se houve um vencedor
+    function verificarVitoria(tabuleiro) {
+        // Verifica linhas
+        for (let i = 0; i < 3; i++) {
+            if (tabuleiro[i][0] !== '' && tabuleiro[i][0] === tabuleiro[i][1] && tabuleiro[i][1] === tabuleiro[i][2]) {
+                return true;
+            }
+        }
+
+        // Verifica colunas
+        for (let i = 0; i < 3; i++) {
+            if (tabuleiro[0][i] !== '' && tabuleiro[0][i] === tabuleiro[1][i] && tabuleiro[1][i] === tabuleiro[2][i]) {
+                return true;
+            }
+        }
+
+        // Verifica diagonais
+        if (tabuleiro[0][0] !== '' && tabuleiro[0][0] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][2]) {
+            return true;
+        }
+        if (tabuleiro[0][2] !== '' && tabuleiro[0][2] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][0]) {
+            return true;
+        }
+
+        // Verifica se ainda existem células vazias
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (tabuleiro[i][j] === '') {
+                    return false;
+                }
+            }
+        }
+
+        // Se não houver vencedor e não houver células vazias, é um empate
+        alert('O jogo empatou!');
+        return true;
+    }
+
+</script>
+
+</html>
